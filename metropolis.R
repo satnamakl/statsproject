@@ -4,7 +4,7 @@
 setwd("H:/2Masters Project")
 
 # How many steps to take
-steps = 1000000
+steps = 100
 
 # Thinning. Saving the state every 100th iteration
 thin = 100
