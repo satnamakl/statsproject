@@ -8,19 +8,19 @@ cat("\014")
 # An "industrial strength" Metropolis implementation
 # for STATS 331
 
-setwd("H:/2Masters Project/Meeting 5_AR1/FINAL")
+#setwd("H:/2Masters Project/Meeting 5_AR1/FINAL")
 
 # How many steps to take
-steps = 10000
+steps = 50000
 
 # Thinning. Saving the state every 100th iteration
-thin = 200
+thin = 10
 
 # Load functions that are model-specific
 source("model.R")
 
 # Starting position in parameter space
-(params = c(a = 50, b = 0.985, c = 2)) # [Named] numeric vectors are allowed
+params = c(mu = 50, log_L = 0.985, log_beta = 2) # [Named] numeric vectors are allowed
 
 # Check that it's okay
 if(log_prior(params) == -Inf)
@@ -75,15 +75,15 @@ for(i in 1:steps) {
     
     # Accept the proposal with probability alpha
     ###### Original code - commented out below:########
-    # if(runif(1) < exp(log_alpha))
-    # {
-    #   params = params2
-    #   logh = logh2
-    #   accepted = accepted + 1
-    # }
-    params = ifelse(runif(1) < exp(log_alpha), params2, params)
-    logh = ifelse(runif(1) < exp(log_alpha), logh2, logh)
-    accepted = ifelse(runif(1) < exp(log_alpha), accepted + 1, accepted)
+    if(runif(1) < exp(log_alpha))
+    {
+      params = params2
+      logh = logh2
+      accepted = accepted + 1
+    }
+#    params = ifelse(runif(1) < exp(log_alpha), params2, params)
+#    logh = ifelse(runif(1) < exp(log_alpha), logh2, logh)
+#    accepted = ifelse(runif(1) < exp(log_alpha), accepted + 1, accepted)
     
     
     
@@ -107,11 +107,11 @@ cat("Acceptance rate =", accepted/steps, "\n")
 # mu, should be around 150
 plot(keep[, 1], type = "l", ylab = "mu, Mean")
 
-# mu, should be around 0.97
-plot(keep[, 2], type = "l", ylab = "alpha, Proportion Remembered")
+# alpha, should be around 0.97
+plot(exp(-1/exp(keep[, 2])), type = "l", ylab = "alpha, Proportion Remembered")
 
 # beta, should be around 3
-plot(keep[, 3], type = "l", ylab = "beta, Jump")
+plot(exp(keep[, 3]), type = "l", ylab = "beta, Jump")
 
 
 
